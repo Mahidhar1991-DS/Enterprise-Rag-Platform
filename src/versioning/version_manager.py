@@ -49,3 +49,4 @@ class VersionManager:
         )
 
         return version
+    

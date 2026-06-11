@@ -12,12 +12,21 @@ from src.api.routes.upload_routes import (
     router as upload_router
 )
 
+from src.api.routes.document_routes import (
+    router as document_router
+)
+
+
 app = FastAPI(
     title="Enterprise RAG Platform"
 )
 
 app.include_router(
     upload_router
+)
+
+app.include_router(
+    document_router
 )
 
 app.include_router(

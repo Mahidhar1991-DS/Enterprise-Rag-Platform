@@ -1,8 +1,11 @@
 venv/
-.env
 __pycache__/
-*.pyc
-.idea/
-.vscode/
-faiss_index/
-chroma_db/
+.env
+
+data/vectorstore/faiss.index
+data/vectorstore/mapping.pkl
+
+*.db
+*.sqlite
+
+.DS_Store

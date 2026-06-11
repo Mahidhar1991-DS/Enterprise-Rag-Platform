@@ -70,7 +70,28 @@ class DocumentRepository:
     def get_document_by_name(
         self,
         document_name: str
-    ) -> Optional[dict]:
+        ) -> Optional[dict]:
+
+            conn = self.db.get_connection()
+
+            try:
+
+                cursor = conn.execute(
+                    """
+                    SELECT *
+                    FROM documents
+                    WHERE document_name = ?
+                    """,
+                    (document_name,),
+                )
+
+                row = cursor.fetchone()
+
+                return dict(row) if row else None
+
+            finally:
+                conn.close()
+    def get_all_documents(self):
 
         conn = self.db.get_connection()
 
@@ -80,14 +101,44 @@ class DocumentRepository:
                 """
                 SELECT *
                 FROM documents
-                WHERE document_name = ?
-                """,
-                (document_name,),
+                ORDER BY created_at DESC
+                """
             )
 
-            row = cursor.fetchone()
+            rows = cursor.fetchall()
 
-            return dict(row) if row else None
+            return [dict(row) for row in rows]
 
         finally:
             conn.close()
+            
+   
+    def delete_document(
+        self,
+        document_id: str
+    ):
+
+        conn = self.db.get_connection()
+
+        try:
+
+            cursor = conn.execute(
+                """
+                DELETE
+                FROM documents
+                WHERE document_id = ?
+                """,
+                (document_id,)
+            )
+
+            print(
+                "Rows Deleted:",
+                cursor.rowcount
+            )
+
+            conn.commit()
+
+        finally:
+
+            conn.close()        
+        
