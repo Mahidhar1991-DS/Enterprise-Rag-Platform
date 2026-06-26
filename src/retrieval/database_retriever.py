@@ -22,7 +22,7 @@ class DatabaseRetriever:
 
             chunk = (
                 self.chunk_repo
-                .get_chunk_by_id(
+                .get_active_chunk_by_id(
                     result["chunk_id"]
                 )
             )

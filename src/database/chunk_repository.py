@@ -136,3 +136,32 @@ class ChunkRepository:
 
         finally:
             conn.close()
+    
+    def get_active_chunk_by_id(
+        self,
+        chunk_id: str
+    ):
+
+        conn = self.db.get_connection()
+
+        try:
+
+            cursor = conn.execute(
+                """
+                SELECT dc.*
+                FROM document_chunks dc
+                JOIN document_versions dv
+                ON dc.version_id = dv.version_id
+                WHERE
+                    dc.chunk_id = ?
+                    AND dv.active = 1
+                """,
+                (chunk_id,)
+            )
+
+            row = cursor.fetchone()
+
+            return dict(row) if row else None
+
+        finally:
+            conn.close()
