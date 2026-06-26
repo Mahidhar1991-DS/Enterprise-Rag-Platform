@@ -29,7 +29,8 @@ class RetrievalPipeline:
 
     def retrieve(
         self,
-        question
+        question,
+        category=None
     ):
 
         query_embedding = (
@@ -45,9 +46,12 @@ class RetrievalPipeline:
             )
         )
 
-        return (
+        chunks = (
             self.database_retriever
             .retrieve_chunks(
-                faiss_results
+                faiss_results=faiss_results,
+                category=category
             )
         )
+
+        return chunks

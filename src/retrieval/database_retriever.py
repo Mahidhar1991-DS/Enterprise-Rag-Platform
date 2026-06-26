@@ -13,7 +13,8 @@ class DatabaseRetriever:
 
     def retrieve_chunks(
         self,
-        faiss_results
+        faiss_results,
+        category = None
     ):
 
         chunks = []
@@ -21,10 +22,11 @@ class DatabaseRetriever:
         for result in faiss_results:
 
             chunk = (
-                self.chunk_repo
-                .get_active_chunk_by_id(
-                    result["chunk_id"]
-                )
+                    self.chunk_repo
+                    .get_active_chunk_by_id(
+                        chunk_id=result["chunk_id"],
+                        category=category
+                    )
             )
 
             if chunk:

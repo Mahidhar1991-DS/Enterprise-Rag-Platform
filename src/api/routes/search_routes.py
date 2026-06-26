@@ -1,11 +1,7 @@
 from fastapi import APIRouter
 
-from src.dto.search_request import (
+from src.models.search_request import (
     SearchRequest
-)
-
-from src.dto.search_response import (
-    SearchResponse
 )
 
 from src.orchestrator.retrieval_pipeline import (
@@ -18,38 +14,30 @@ from src.llm.chains.rag_chain import (
 
 router = APIRouter()
 
+pipeline = RetrievalPipeline()
 
-@router.post(
-    "/search",
-    response_model=SearchResponse
-)
+rag = RAGChain()
+
+
+@router.post("/search")
 def search(
     request: SearchRequest
 ):
 
-    question = request.question
-
-    pipeline = (
-        RetrievalPipeline()
-    )
-
-    rag = (
-        RAGChain()
-    )
-
     chunks = (
         pipeline.retrieve(
-            question
+            question = request.question,
+            category= request.category
         )
     )
 
     response = (
         rag.run(
-            question,
+            request.question,
             chunks
         )
     )
 
-    return SearchResponse(
-        answer=response
-    )
+    return {
+        "answer": response
+    }

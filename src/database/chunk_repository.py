@@ -92,22 +92,44 @@ class ChunkRepository:
         finally:
             conn.close()
 
-    def get_chunk_by_id(
-        self,
-        chunk_id: str
-    ):
+    def get_active_chunk_by_id(
+    self,
+    chunk_id: str,
+    category: str = None
+):
 
         conn = self.db.get_connection()
 
         try:
 
-            cursor = conn.execute(
+            query = """
+                SELECT
+                    dc.*,
+                    d.category,
+                    d.document_name
+                FROM document_chunks dc
+                JOIN document_versions dv
+                    ON dc.version_id = dv.version_id
+                JOIN documents d
+                    ON dv.document_id = d.document_id
+                WHERE
+                    dc.chunk_id = ?
+                    AND dv.active = 1
+            """
+
+            params = [chunk_id]
+
+            if category:
+
+                query += """
+                    AND d.category = ?
                 """
-                SELECT *
-                FROM document_chunks
-                WHERE chunk_id = ?
-                """,
-                (chunk_id,),
+
+                params.append(category)
+
+            cursor = conn.execute(
+                query,
+                params
             )
 
             row = cursor.fetchone()
@@ -115,6 +137,7 @@ class ChunkRepository:
             return dict(row) if row else None
 
         finally:
+
             conn.close()
 
     def get_all_chunks(self):
@@ -139,24 +162,42 @@ class ChunkRepository:
     
     def get_active_chunk_by_id(
         self,
-        chunk_id: str
+        chunk_id: str,
+        category: str = None
     ):
 
         conn = self.db.get_connection()
 
         try:
 
-            cursor = conn.execute(
-                """
-                SELECT dc.*
+            query = """
+                SELECT
+                    dc.*,
+                    d.category,
+                    d.document_name
                 FROM document_chunks dc
                 JOIN document_versions dv
-                ON dc.version_id = dv.version_id
+                    ON dc.version_id = dv.version_id
+                JOIN documents d
+                    ON dv.document_id = d.document_id
                 WHERE
                     dc.chunk_id = ?
                     AND dv.active = 1
-                """,
-                (chunk_id,)
+            """
+
+            params = [chunk_id]
+
+            if category:
+
+                query += """
+                    AND d.category = ?
+                """
+
+                params.append(category)
+
+            cursor = conn.execute(
+                query,
+                params
             )
 
             row = cursor.fetchone()
@@ -164,4 +205,5 @@ class ChunkRepository:
             return dict(row) if row else None
 
         finally:
+
             conn.close()
