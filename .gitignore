@@ -1,11 +1,32 @@
-venv/
+# Python
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
 .env
 
-data/vectorstore/faiss.index
-data/vectorstore/mapping.pkl
-
-*.db
-*.sqlite
-
+# macOS
 .DS_Store
+
+# SQLite Database
+database/*.db
+
+# FAISS Vector Store
+data/vectorstore/*.index
+data/vectorstore/*.pkl
+
+# Uploaded Test Files
+data/raw/*.txt
+!data/raw/.gitkeep
+
+# Logs
+*.log
+
+# Pytest
+.pytest_cache/
+
+# VS Code
+.vscode/
