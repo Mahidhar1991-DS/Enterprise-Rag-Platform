@@ -14,7 +14,8 @@ class DatabaseRetriever:
     def retrieve_chunks(
         self,
         faiss_results,
-        category = None
+        category = None,
+        document_name = None
     ):
 
         chunks = []
@@ -25,7 +26,8 @@ class DatabaseRetriever:
                     self.chunk_repo
                     .get_active_chunk_by_id(
                         chunk_id=result["chunk_id"],
-                        category=category
+                        category=category,
+                        document_name = document_name
                     )
             )
 

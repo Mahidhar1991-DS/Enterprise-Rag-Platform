@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+    
 
 from src.models.search_request import (
     SearchRequest
@@ -24,20 +25,19 @@ def search(
     request: SearchRequest
 ):
 
-    chunks = (
-        pipeline.retrieve(
-            question = request.question,
-            category= request.category
-        )
+    chunks = pipeline.retrieve(
+        question=request.question,
+        category=request.category,
+        document_name=request.document_name
     )
 
-    response = (
-        rag.run(
-            request.question,
-            chunks
-        )
+    response = rag.run(
+        request.question,
+        chunks
     )
 
     return {
         "answer": response
     }
+
+

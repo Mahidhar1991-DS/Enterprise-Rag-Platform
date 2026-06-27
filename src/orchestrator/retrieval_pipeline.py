@@ -28,10 +28,11 @@ class RetrievalPipeline:
         )
 
     def retrieve(
-        self,
-        question,
-        category=None
-    ):
+    self,
+    question,
+    category=None,
+    document_name=None
+):
 
         query_embedding = (
             self.embedding_manager
@@ -50,7 +51,8 @@ class RetrievalPipeline:
             self.database_retriever
             .retrieve_chunks(
                 faiss_results=faiss_results,
-                category=category
+                category=category,
+                document_name=document_name
             )
         )
 

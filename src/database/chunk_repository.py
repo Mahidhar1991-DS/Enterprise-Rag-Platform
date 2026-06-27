@@ -93,10 +93,11 @@ class ChunkRepository:
             conn.close()
 
     def get_active_chunk_by_id(
-    self,
-    chunk_id: str,
-    category: str = None
-):
+        self,
+        chunk_id: str,
+        category: str = None,
+        document_name: str = None
+    ):
 
         conn = self.db.get_connection()
 
@@ -120,17 +121,20 @@ class ChunkRepository:
             params = [chunk_id]
 
             if category:
-
                 query += """
                     AND d.category = ?
                 """
-
                 params.append(category)
 
-            cursor = conn.execute(
-                query,
-                params
-            )
+            if document_name:
+                query += """
+                    AND d.document_name = ?
+                """
+                params.append(document_name)
+
+            cursor = conn.execute(query, params)
+
+           
 
             row = cursor.fetchone()
 
@@ -160,50 +164,4 @@ class ChunkRepository:
         finally:
             conn.close()
     
-    def get_active_chunk_by_id(
-        self,
-        chunk_id: str,
-        category: str = None
-    ):
-
-        conn = self.db.get_connection()
-
-        try:
-
-            query = """
-                SELECT
-                    dc.*,
-                    d.category,
-                    d.document_name
-                FROM document_chunks dc
-                JOIN document_versions dv
-                    ON dc.version_id = dv.version_id
-                JOIN documents d
-                    ON dv.document_id = d.document_id
-                WHERE
-                    dc.chunk_id = ?
-                    AND dv.active = 1
-            """
-
-            params = [chunk_id]
-
-            if category:
-
-                query += """
-                    AND d.category = ?
-                """
-
-                params.append(category)
-
-            cursor = conn.execute(
-                query,
-                params
-            )
-
-            row = cursor.fetchone()
-
-            return dict(row) if row else None
-
-        finally:
-
-            conn.close()
+    
