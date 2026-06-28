@@ -1,5 +1,6 @@
 from src.database.postgres_client import DatabaseClient
 from src.models.chunk import Chunk
+from src.models.search_request import SearchRequest
 
 
 class ChunkRepository:
@@ -92,11 +93,30 @@ class ChunkRepository:
         finally:
             conn.close()
 
+    def get_all_chunks(self):
+
+        conn = self.db.get_connection()
+
+        try:
+
+            cursor = conn.execute(
+                """
+                SELECT *
+                FROM document_chunks
+                """
+            )
+
+            rows = cursor.fetchall()
+
+            return [dict(row) for row in rows]
+
+        finally:
+            conn.close()
+
     def get_active_chunk_by_id(
         self,
         chunk_id: str,
-        category: str = None,
-        document_name: str = None
+        request: SearchRequest
     ):
 
         conn = self.db.get_connection()
@@ -120,21 +140,30 @@ class ChunkRepository:
 
             params = [chunk_id]
 
-            if category:
+            if request.category:
+
                 query += """
                     AND d.category = ?
                 """
-                params.append(category)
 
-            if document_name:
+                params.append(
+                    request.category
+                )
+
+            if request.document_name:
+
                 query += """
                     AND d.document_name = ?
                 """
-                params.append(document_name)
 
-            cursor = conn.execute(query, params)
+                params.append(
+                    request.document_name
+                )
 
-           
+            cursor = conn.execute(
+                query,
+                params
+            )
 
             row = cursor.fetchone()
 
@@ -143,25 +172,3 @@ class ChunkRepository:
         finally:
 
             conn.close()
-
-    def get_all_chunks(self):
-
-        conn = self.db.get_connection()
-
-        try:
-
-            cursor = conn.execute(
-                """
-                SELECT *
-                FROM document_chunks
-                """
-            )
-
-            rows = cursor.fetchall()
-
-            return [dict(row) for row in rows]
-
-        finally:
-            conn.close()
-    
-    

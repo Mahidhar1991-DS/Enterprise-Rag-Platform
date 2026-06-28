@@ -26,10 +26,8 @@ def search(
 ):
 
     chunks = pipeline.retrieve(
-        question=request.question,
-        category=request.category,
-        document_name=request.document_name
-    )
+    request
+)
 
     response = rag.run(
         request.question,

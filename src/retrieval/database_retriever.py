@@ -2,6 +2,10 @@ from src.database.chunk_repository import (
     ChunkRepository
 )
 
+from src.models.search_request import (
+    SearchRequest
+)
+
 
 class DatabaseRetriever:
 
@@ -14,8 +18,7 @@ class DatabaseRetriever:
     def retrieve_chunks(
         self,
         faiss_results,
-        category = None,
-        document_name = None
+        request: SearchRequest
     ):
 
         chunks = []
@@ -23,12 +26,11 @@ class DatabaseRetriever:
         for result in faiss_results:
 
             chunk = (
-                    self.chunk_repo
-                    .get_active_chunk_by_id(
-                        chunk_id=result["chunk_id"],
-                        category=category,
-                        document_name = document_name
-                    )
+                self.chunk_repo
+                .get_active_chunk_by_id(
+                    chunk_id=result["chunk_id"],
+                    request=request
+                )
             )
 
             if chunk:

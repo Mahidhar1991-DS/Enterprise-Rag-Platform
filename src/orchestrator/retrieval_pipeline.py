@@ -10,6 +10,10 @@ from src.retrieval.database_retriever import (
     DatabaseRetriever
 )
 
+from src.models.search_request import (
+    SearchRequest
+)
+
 
 class RetrievalPipeline:
 
@@ -28,16 +32,14 @@ class RetrievalPipeline:
         )
 
     def retrieve(
-    self,
-    question,
-    category=None,
-    document_name=None
-):
+        self,
+        request: SearchRequest
+    ):
 
         query_embedding = (
             self.embedding_manager
             .create_embedding(
-                question
+                request.question
             )
         )
 
@@ -51,8 +53,7 @@ class RetrievalPipeline:
             self.database_retriever
             .retrieve_chunks(
                 faiss_results=faiss_results,
-                category=category,
-                document_name=document_name
+                request=request
             )
         )
 
