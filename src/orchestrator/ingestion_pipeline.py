@@ -71,9 +71,10 @@ class IngestionPipeline:
         )
 
     def process_file(
-        self,
-        file_path: str,
-        category: str = "GENERAL"
+    self,
+    file_path: str,
+    category: str = "GENERAL",
+    access_level: str = "PUBLIC"
     ):
 
         file_name = Path(
@@ -166,7 +167,8 @@ class IngestionPipeline:
                 document_name=file_name,
                 category=category,
                 source_type="LOCAL",
-                source_path=file_path
+                source_path=file_path,
+                access_level=access_level
             )
 
             self.document_repo.create_document(

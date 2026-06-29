@@ -9,7 +9,10 @@ class DocumentRepository:
     def __init__(self):
         self.db = DatabaseClient()
 
-    def create_document(self, document: Document):
+    def create_document(
+        self,
+        document: Document
+    ):
 
         conn = self.db.get_connection()
 
@@ -23,9 +26,10 @@ class DocumentRepository:
                     category,
                     source_type,
                     source_path,
-                    status
+                    status,
+                    access_level
                 )
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     document.document_id,
@@ -34,6 +38,7 @@ class DocumentRepository:
                     document.source_type,
                     document.source_path,
                     document.status,
+                    document.access_level,
                 ),
             )
 
@@ -70,27 +75,28 @@ class DocumentRepository:
     def get_document_by_name(
         self,
         document_name: str
-        ) -> Optional[dict]:
+    ) -> Optional[dict]:
 
-            conn = self.db.get_connection()
+        conn = self.db.get_connection()
 
-            try:
+        try:
 
-                cursor = conn.execute(
-                    """
-                    SELECT *
-                    FROM documents
-                    WHERE document_name = ?
-                    """,
-                    (document_name,),
-                )
+            cursor = conn.execute(
+                """
+                SELECT *
+                FROM documents
+                WHERE document_name = ?
+                """,
+                (document_name,),
+            )
 
-                row = cursor.fetchone()
+            row = cursor.fetchone()
 
-                return dict(row) if row else None
+            return dict(row) if row else None
 
-            finally:
-                conn.close()
+        finally:
+            conn.close()
+
     def get_all_documents(self):
 
         conn = self.db.get_connection()
@@ -111,8 +117,7 @@ class DocumentRepository:
 
         finally:
             conn.close()
-            
-   
+
     def delete_document(
         self,
         document_id: str
@@ -140,5 +145,4 @@ class DocumentRepository:
 
         finally:
 
-            conn.close()        
-        
+            conn.close()

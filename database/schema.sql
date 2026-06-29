@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS documents (
     document_name TEXT NOT NULL,
     category TEXT NOT NULL,
     source_type TEXT,
+    access_level TEXT DEFAULT 'PUBLIC',
     source_path TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

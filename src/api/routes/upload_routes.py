@@ -15,7 +15,8 @@ router = APIRouter()
 @router.post("/upload")
 async def upload_file(
     file: UploadFile = File(...),
-    category: str = Form(...)
+    category: str = Form(...),
+    access_level: str = Form("PUBLIC")
 ):
 
     os.makedirs(
@@ -38,7 +39,8 @@ async def upload_file(
 
     pipeline.process_file(
         file_path=file_path,
-        category=category
+        category=category,
+        access_level=access_level
     )
 
     return {
