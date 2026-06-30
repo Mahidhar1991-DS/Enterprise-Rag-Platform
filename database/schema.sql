@@ -109,3 +109,25 @@ ON document_chunks(version_id);
 
 CREATE INDEX IF NOT EXISTS idx_audit_logs_document
 ON audit_logs(document_id);
+
+
+-- =====================================
+-- Creating Jobs Table
+-- =====================================
+
+CREATE TABLE jobs (
+
+    job_id TEXT PRIMARY KEY,
+
+    file_path TEXT NOT NULL,
+
+    category TEXT NOT NULL,
+
+    access_level TEXT NOT NULL,
+
+    status TEXT NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    completed_at TIMESTAMP
+);

@@ -5,11 +5,13 @@ from fastapi import Form
 
 import os
 
-from src.orchestrator.ingestion_pipeline import (
-    IngestionPipeline
+from src.background.job_manager import (
+    JobManager
 )
 
 router = APIRouter()
+
+job_manager = JobManager()
 
 
 @router.post("/upload")
@@ -35,15 +37,14 @@ async def upload_file(
 
         buffer.write(content)
 
-    pipeline = IngestionPipeline()
-
-    pipeline.process_file(
+    job = job_manager.create_job(
         file_path=file_path,
         category=category,
-        access_level=access_level
+        access_level=access_level.upper()
     )
 
     return {
-        "message":
-            f"{file.filename} uploaded successfully"
+        "message": "Upload accepted",
+        "job_id": job.job_id,
+        "status": job.status
     }
