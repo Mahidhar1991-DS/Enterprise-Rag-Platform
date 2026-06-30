@@ -6,6 +6,10 @@ from src.models.search_request import (
     SearchRequest
 )
 
+from src.authorization.permission_engine import (
+    PermissionEngine
+)
+
 
 class DatabaseRetriever:
 
@@ -13,6 +17,10 @@ class DatabaseRetriever:
 
         self.chunk_repo = (
             ChunkRepository()
+        )
+
+        self.permission_engine = (
+            PermissionEngine()
         )
 
     def retrieve_chunks(
@@ -33,10 +41,24 @@ class DatabaseRetriever:
                 )
             )
 
-            if chunk:
+            if not chunk:
+                continue
+
+            allowed = self.permission_engine.has_access(
+                chunk=chunk,
+                request=request
+            )
+
+            print(
+                f"{chunk['document_name']} | {chunk['access_level']} | Allowed: {allowed}"
+            )
+
+            if allowed:
 
                 chunks.append(
                     chunk
                 )
 
-        return chunks
+            print("Final Chunks:", [c["document_name"] for c in chunks])
+
+            return chunks

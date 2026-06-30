@@ -14,6 +14,17 @@ class RAGChain:
         results
     ):
 
+        if not results:
+
+            return """
+    No authorized documents were found for your query.
+
+    Possible reasons:
+    - You do not have permission to access this document.
+    - No relevant document exists.
+    - Try refining your search.
+    """
+
         context = (
             RetrievalChain.build_context(
                 results
@@ -48,8 +59,8 @@ class RAGChain:
         )
 
         return f"""
-{answer}
+    {answer}
 
-Sources:
-{citation_text}
-"""
+    Sources:
+    {citation_text}
+    """

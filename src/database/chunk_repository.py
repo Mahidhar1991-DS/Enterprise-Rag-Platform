@@ -125,9 +125,10 @@ class ChunkRepository:
 
             query = """
                 SELECT
-                    dc.*,
-                    d.category,
-                    d.document_name
+                dc.*,
+                d.category,
+                d.document_name,
+                d.access_level
                 FROM document_chunks dc
                 JOIN document_versions dv
                     ON dc.version_id = dv.version_id
