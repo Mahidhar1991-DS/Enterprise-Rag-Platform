@@ -1,3 +1,4 @@
+import time
 from src.background.job_manager import (
     JobManager
 )
@@ -56,3 +57,16 @@ class BackgroundWorker:
                     job["job_id"],
                     "FAILED"
                 )
+    def start(
+         self
+    ):
+
+        print(
+            "Background Worker Started..."
+        )
+
+        while True:
+
+            self.process_pending_jobs()
+
+            time.sleep(5)

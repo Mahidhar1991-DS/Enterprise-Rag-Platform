@@ -4,7 +4,7 @@ from src.background.worker import (
 
 worker = BackgroundWorker()
 
-worker.process_pending_jobs()
+worker.start()
 
 print(
     "All pending jobs processed."
