@@ -131,3 +131,21 @@ CREATE TABLE jobs (
 
     completed_at TIMESTAMP
 );
+
+- =====================================
+-- Creating Metrics Table
+-- =====================================
+
+
+CREATE TABLE metrics (
+
+    metric_id TEXT PRIMARY KEY,
+
+    metric_name TEXT NOT NULL,
+
+    metric_value REAL NOT NULL,
+
+    metric_type TEXT NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

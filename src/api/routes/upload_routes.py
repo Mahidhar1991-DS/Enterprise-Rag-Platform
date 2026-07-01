@@ -9,9 +9,15 @@ from src.background.job_manager import (
     JobManager
 )
 
+from src.monitoring.monitoring_manager import (
+    MonitoringManager
+)
+
 router = APIRouter()
 
 job_manager = JobManager()
+
+monitoring = MonitoringManager()
 
 
 @router.post("/upload")
@@ -41,6 +47,12 @@ async def upload_file(
         file_path=file_path,
         category=category,
         access_level=access_level.upper()
+    )
+    
+    monitoring.record_metric(
+    metric_name="upload",
+    metric_value=1,
+    metric_type="COUNTER"
     )
 
     return {
