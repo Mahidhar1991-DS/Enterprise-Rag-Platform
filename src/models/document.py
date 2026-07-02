@@ -1,5 +1,17 @@
 from dataclasses import dataclass
 
+from src.constants.access_levels import (
+    AccessLevel
+)
+
+from src.constants.document_status import (
+    DocumentStatus
+)
+
+from src.constants.source_types import (
+    SourceType
+)
+
 
 @dataclass
 class Document:
@@ -10,10 +22,10 @@ class Document:
 
     category: str
 
-    source_type: str
+    source_type: str = SourceType.LOCAL
 
-    source_path: str
+    source_path: str = ""
 
-    access_level: str = "PUBLIC"
+    access_level: str = AccessLevel.PUBLIC
 
-    status: str = "ACTIVE"
+    status: str = DocumentStatus.ACTIVE

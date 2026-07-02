@@ -1,12 +1,28 @@
 import uuid
 from pathlib import Path
 
-from src.models.document import Document
+from src.models.document import (
+    Document
+)
 
-from src.models.chunk import Chunk
+from src.models.chunk import (
+    Chunk
+)
 
 from src.database.chunk_repository import (
     ChunkRepository
+)
+
+from src.database.document_repository import (
+    DocumentRepository
+)
+
+from src.database.version_repository import (
+    VersionRepository
+)
+
+from src.database.audit_repository import (
+    AuditRepository
 )
 
 from src.preprocessing.chunkers.recursive_chunker import (
@@ -29,20 +45,24 @@ from src.sync.hash_generator import (
     HashGenerator
 )
 
-from src.database.document_repository import (
-    DocumentRepository
-)
-
-from src.database.version_repository import (
-    VersionRepository
-)
-
-from src.database.audit_repository import (
-    AuditRepository
-)
-
 from src.versioning.version_manager import (
     VersionManager
+)
+
+from src.constants.categories import (
+    Categories
+)
+
+from src.constants.access_levels import (
+    AccessLevel
+)
+
+from src.constants.source_types import (
+    SourceType
+)
+
+from src.constants.audit_events import (
+    AuditEvents
 )
 
 
@@ -62,19 +82,15 @@ class IngestionPipeline:
 
         self.chunker = RecursiveChunker()
 
-        self.embedding_manager = (
-        EmbeddingManager()
-        )
+        self.embedding_manager = EmbeddingManager()
 
-        self.faiss_client = (
-        FAISSClient()
-        )
+        self.faiss_client = FAISSClient()
 
     def process_file(
-    self,
-    file_path: str,
-    category: str = "GENERAL",
-    access_level: str = "PUBLIC"
+        self,
+        file_path: str,
+        category: str = Categories.GENERAL,
+        access_level: str = AccessLevel.PUBLIC
     ):
 
         file_name = Path(
@@ -112,8 +128,7 @@ class IngestionPipeline:
             )
 
             latest_version = (
-                self.version_repo
-                .get_latest_version(
+                self.version_repo.get_latest_version(
                     document_id
                 )
             )
@@ -121,8 +136,7 @@ class IngestionPipeline:
             if (
                 latest_version
                 and
-                latest_version["file_hash"]
-                == file_hash
+                latest_version["file_hash"] == file_hash
             ):
 
                 print(
@@ -132,8 +146,7 @@ class IngestionPipeline:
                 return
 
             version = (
-                self.version_manager
-                .create_new_version(
+                self.version_manager.create_new_version(
                     document_id=document_id,
                     file_hash=file_hash,
                     file_size=len(content)
@@ -142,7 +155,7 @@ class IngestionPipeline:
 
             self.audit_repo.create_audit_log(
                 document_id=document_id,
-                event_type="UPDATE",
+                event_type=AuditEvents.UPDATE,
                 old_version=version.version_number - 1,
                 new_version=version.version_number,
                 description=f"{file_name} updated"
@@ -151,11 +164,12 @@ class IngestionPipeline:
             print(
                 f"Created Version {version.version_number}"
             )
+
             self.create_chunks_and_embeddings(
                 content,
                 version.version_id
             )
-            
+
         else:
 
             document_id = str(
@@ -166,7 +180,7 @@ class IngestionPipeline:
                 document_id=document_id,
                 document_name=file_name,
                 category=category,
-                source_type="LOCAL",
+                source_type=SourceType.LOCAL,
                 source_path=file_path,
                 access_level=access_level
             )
@@ -176,8 +190,7 @@ class IngestionPipeline:
             )
 
             version = (
-                self.version_manager
-                .create_new_version(
+                self.version_manager.create_new_version(
                     document_id=document_id,
                     file_hash=file_hash,
                     file_size=len(content)
@@ -186,7 +199,7 @@ class IngestionPipeline:
 
             self.audit_repo.create_audit_log(
                 document_id=document_id,
-                event_type="UPLOAD",
+                event_type=AuditEvents.UPLOAD,
                 new_version=1,
                 description=f"{file_name} uploaded"
             )
@@ -196,14 +209,14 @@ class IngestionPipeline:
             )
 
             print(
-                    "Version 1 created."
-                )
+                "Version 1 created."
+            )
 
             self.create_chunks_and_embeddings(
                 content,
                 version.version_id
             )
-             
+
     def create_chunks_and_embeddings(
         self,
         content,
@@ -228,8 +241,7 @@ class IngestionPipeline:
             )
 
             embedding = (
-                self.embedding_manager
-                .create_embedding(
+                self.embedding_manager.create_embedding(
                     chunk_text
                 )
             )

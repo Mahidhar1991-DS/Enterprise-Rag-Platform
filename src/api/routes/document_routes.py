@@ -19,8 +19,7 @@ version_repo = VersionRepository()
 def get_documents():
 
     return (
-        document_repo
-        .get_all_documents()
+        document_repo.get_all_documents()
     )
 
 
@@ -32,11 +31,11 @@ def get_document_versions(
 ):
 
     return (
-        version_repo
-        .get_versions_by_document(
+        version_repo.get_versions_by_document(
             document_id
         )
     )
+
 
 @router.get(
     "/documents/{document_id}"
@@ -61,10 +60,17 @@ def get_document(
 
     for version in versions:
 
-        if version["active"] == 1:
+        if version["active"]:
 
             active_version = version
             break
+
+    return {
+        "document": document,
+        "active_version": active_version,
+        "versions": versions
+    }
+
 
 @router.delete(
     "/documents/{document_id}"

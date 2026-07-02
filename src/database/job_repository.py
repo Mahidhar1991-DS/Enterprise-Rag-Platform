@@ -8,6 +8,10 @@ from src.models.job import (
     Job
 )
 
+from src.constants.job_status import (
+    JobStatus
+)
+
 
 class JobRepository:
 
@@ -18,7 +22,7 @@ class JobRepository:
     def create_job(
         self,
         job: Job
-    ):
+    ) -> None:
 
         conn = self.db.get_connection()
 
@@ -80,7 +84,7 @@ class JobRepository:
         self,
         job_id: str,
         status: str
-    ):
+    ) -> None:
 
         conn = self.db.get_connection()
 
@@ -106,7 +110,9 @@ class JobRepository:
 
             conn.close()
 
-    def get_pending_jobs(self):
+    def get_pending_jobs(
+        self
+    ) -> list[dict]:
 
         conn = self.db.get_connection()
 
@@ -116,14 +122,20 @@ class JobRepository:
                 """
                 SELECT *
                 FROM jobs
-                WHERE status = 'PENDING'
+                WHERE status = ?
                 ORDER BY created_at
-                """
+                """,
+                (
+                    JobStatus.PENDING,
+                )
             )
 
             rows = cursor.fetchall()
 
-            return [dict(row) for row in rows]
+            return [
+                dict(row)
+                for row in rows
+            ]
 
         finally:
 

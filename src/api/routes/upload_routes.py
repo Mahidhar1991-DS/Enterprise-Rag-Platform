@@ -13,6 +13,18 @@ from src.monitoring.monitoring_manager import (
     MonitoringManager
 )
 
+from src.constants.metric_names import (
+    MetricNames
+)
+
+from src.constants.metric_types import (
+    MetricTypes
+)
+
+from src.constants.access_levels import (
+    AccessLevel
+)
+
 router = APIRouter()
 
 job_manager = JobManager()
@@ -24,7 +36,9 @@ monitoring = MonitoringManager()
 async def upload_file(
     file: UploadFile = File(...),
     category: str = Form(...),
-    access_level: str = Form("PUBLIC")
+    access_level: str = Form(
+        AccessLevel.PUBLIC
+    )
 ):
 
     os.makedirs(
@@ -32,7 +46,9 @@ async def upload_file(
         exist_ok=True
     )
 
-    file_path = f"data/raw/{file.filename}"
+    file_path = (
+        f"data/raw/{file.filename}"
+    )
 
     with open(
         file_path,
@@ -41,18 +57,20 @@ async def upload_file(
 
         content = await file.read()
 
-        buffer.write(content)
+        buffer.write(
+            content
+        )
 
     job = job_manager.create_job(
         file_path=file_path,
         category=category,
         access_level=access_level.upper()
     )
-    
+
     monitoring.record_metric(
-    metric_name="upload",
-    metric_value=1,
-    metric_type="COUNTER"
+        metric_name=MetricNames.UPLOAD,
+        metric_value=1,
+        metric_type=MetricTypes.COUNTER
     )
 
     return {

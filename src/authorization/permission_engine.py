@@ -1,3 +1,8 @@
+from src.constants.access_levels import (
+    AccessLevel
+)
+
+
 class PermissionEngine:
 
     def has_access(
@@ -8,10 +13,10 @@ class PermissionEngine:
 
         access_level = chunk.get(
             "access_level",
-            "PUBLIC"
+            AccessLevel.PUBLIC
         )
 
-        if access_level == "PUBLIC":
+        if access_level == AccessLevel.PUBLIC:
 
             return True
 

@@ -1,5 +1,13 @@
 from dataclasses import dataclass
 
+from src.constants.job_status import (
+    JobStatus
+)
+
+from src.constants.access_levels import (
+    AccessLevel
+)
+
 
 @dataclass
 class Job:
@@ -10,6 +18,6 @@ class Job:
 
     category: str
 
-    access_level: str
+    access_level: str = AccessLevel.PUBLIC
 
-    status: str = "PENDING"
+    status: str = JobStatus.PENDING

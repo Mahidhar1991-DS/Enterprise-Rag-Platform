@@ -1,0 +1,13 @@
+class SourceType:
+
+    LOCAL = "LOCAL"
+
+    WEBSITE = "WEBSITE"
+
+    SHAREPOINT = "SHAREPOINT"
+
+    OUTLOOK = "OUTLOOK"
+
+    JIRA = "JIRA"
+
+    DATABASE = "DATABASE"

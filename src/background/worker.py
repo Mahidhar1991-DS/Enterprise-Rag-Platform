@@ -7,6 +7,14 @@ from src.orchestrator.ingestion_pipeline import (
     IngestionPipeline
 )
 
+from src.constants.job_status import (
+    JobStatus
+)
+
+from src.configs.worker_config import (
+    WORKER_POLL_INTERVAL
+)
+
 
 class BackgroundWorker:
 
@@ -21,8 +29,8 @@ class BackgroundWorker:
         )
 
     def process_pending_jobs(
-        self
-    ):
+            self
+        ) -> None:
 
         jobs = (
             self.job_manager
@@ -35,7 +43,7 @@ class BackgroundWorker:
 
                 self.job_manager.update_status(
                     job["job_id"],
-                    "PROCESSING"
+                    JobStatus.PROCESSING
                 )
 
                 self.pipeline.process_file(
@@ -46,20 +54,24 @@ class BackgroundWorker:
 
                 self.job_manager.update_status(
                     job["job_id"],
-                    "COMPLETED"
+                    JobStatus.COMPLETED
                 )
 
             except Exception as e:
 
-                print(e)
+                print(
+                        f"Job Processing Failed: {e}"
+                    )
 
                 self.job_manager.update_status(
                     job["job_id"],
-                    "FAILED"
+                    JobStatus.FAILED
                 )
+                
+                
     def start(
-         self
-    ):
+        self
+    ) -> None:
 
         print(
             "Background Worker Started..."
@@ -69,4 +81,4 @@ class BackgroundWorker:
 
             self.process_pending_jobs()
 
-            time.sleep(5)
+            time.sleep(WORKER_POLL_INTERVAL)

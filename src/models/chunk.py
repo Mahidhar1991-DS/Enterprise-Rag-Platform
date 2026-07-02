@@ -2,9 +2,14 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
+from src.constants.embedding_status import (
+    EmbeddingStatus
+)
+
 
 @dataclass
 class Chunk:
+
     chunk_id: str
 
     version_id: str
@@ -15,11 +20,14 @@ class Chunk:
 
     vector_id: Optional[str] = None
 
-    embedding_status: str = "PENDING"
+    embedding_status: str = EmbeddingStatus.PENDING
 
     created_at: Optional[datetime] = None
 
-    def to_dict(self):
+    def to_dict(
+        self
+    ) -> dict:
+
         return {
             "chunk_id": self.chunk_id,
             "version_id": self.version_id,

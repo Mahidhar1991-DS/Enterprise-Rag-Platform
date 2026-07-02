@@ -1,18 +1,24 @@
 from typing import Optional
 
-from src.models.document import Document
-from src.database.postgres_client import DatabaseClient
+from src.models.document import (
+    Document
+)
+
+from src.database.postgres_client import (
+    DatabaseClient
+)
 
 
 class DocumentRepository:
 
     def __init__(self):
+
         self.db = DatabaseClient()
 
     def create_document(
         self,
         document: Document
-    ):
+    ) -> None:
 
         conn = self.db.get_connection()
 
@@ -45,6 +51,7 @@ class DocumentRepository:
             conn.commit()
 
         finally:
+
             conn.close()
 
     def get_document_by_id(
@@ -70,6 +77,7 @@ class DocumentRepository:
             return dict(row) if row else None
 
         finally:
+
             conn.close()
 
     def get_document_by_name(
@@ -95,9 +103,12 @@ class DocumentRepository:
             return dict(row) if row else None
 
         finally:
+
             conn.close()
 
-    def get_all_documents(self):
+    def get_all_documents(
+        self
+    ) -> list[dict]:
 
         conn = self.db.get_connection()
 
@@ -113,15 +124,19 @@ class DocumentRepository:
 
             rows = cursor.fetchall()
 
-            return [dict(row) for row in rows]
+            return [
+                dict(row)
+                for row in rows
+            ]
 
         finally:
+
             conn.close()
 
     def delete_document(
         self,
         document_id: str
-    ):
+    ) -> None:
 
         conn = self.db.get_connection()
 

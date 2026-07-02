@@ -1,0 +1,11 @@
+class AccessLevel:
+
+    PUBLIC = "PUBLIC"
+
+    EMPLOYEE = "EMPLOYEE"
+
+    DEPARTMENT = "DEPARTMENT"
+
+    ROLE = "ROLE"
+
+    PRIVATE = "PRIVATE"
