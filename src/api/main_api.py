@@ -16,6 +16,10 @@ from src.api.routes.document_routes import (
     router as document_router
 )
 
+from src.api.routes.analytics_routes import (
+    router as analytics_router
+)
+
 
 app = FastAPI(
     title="Enterprise RAG Platform"
@@ -35,6 +39,10 @@ app.include_router(
 
 app.include_router(
     search_router
+)
+
+app.include_router(
+    analytics_router
 )
 
 @app.get("/")
