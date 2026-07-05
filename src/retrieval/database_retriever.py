@@ -59,6 +59,6 @@ class DatabaseRetriever:
                     chunk
                 )
 
-            print("Final Chunks:", [c["document_name"] for c in chunks])
+        print("Final Chunks:", [c["document_name"] for c in chunks])
 
-            return chunks
+        return chunks

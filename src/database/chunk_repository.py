@@ -173,3 +173,30 @@ class ChunkRepository:
         finally:
 
             conn.close()
+    
+    
+    def get_all_chunks(
+        self
+    ):
+
+        conn = self.db.get_connection()
+
+        try:
+
+            cursor = conn.execute(
+                """
+                SELECT *
+                FROM document_chunks
+                """
+            )
+
+            rows = cursor.fetchall()
+
+            return [
+                dict(row)
+                for row in rows
+            ]
+
+        finally:
+
+            conn.close()
