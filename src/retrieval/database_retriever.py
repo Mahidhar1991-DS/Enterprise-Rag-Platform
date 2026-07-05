@@ -25,18 +25,18 @@ class DatabaseRetriever:
 
     def retrieve_chunks(
         self,
-        faiss_results,
+        retrieval_results,
         request: SearchRequest
     ):
 
         chunks = []
 
-        for result in faiss_results:
+        for result in retrieval_results:
 
             chunk = (
                 self.chunk_repo
                 .get_active_chunk_by_id(
-                    chunk_id=result["chunk_id"],
+                    chunk_id=result.chunk_id,
                     request=request
                 )
             )
@@ -59,6 +59,9 @@ class DatabaseRetriever:
                     chunk
                 )
 
-        print("Final Chunks:", [c["document_name"] for c in chunks])
+        print(
+            "Final Chunks:",
+            [c["document_name"] for c in chunks]
+        )
 
         return chunks

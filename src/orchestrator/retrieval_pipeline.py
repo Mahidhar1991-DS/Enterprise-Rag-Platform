@@ -1,13 +1,13 @@
-from src.vectorstore.faiss_client import (
-    FAISSClient
-)
-
 from src.embeddings.embedding_manager import (
     EmbeddingManager
 )
 
 from src.retrieval.database_retriever import (
     DatabaseRetriever
+)
+
+from src.retrieval.hybrid_retriever import (
+    HybridRetriever
 )
 
 from src.models.search_request import (
@@ -19,8 +19,8 @@ class RetrievalPipeline:
 
     def __init__(self):
 
-        self.faiss = (
-            FAISSClient()
+        self.hybrid = (
+            HybridRetriever()
         )
 
         self.embedding_manager = (
@@ -43,16 +43,17 @@ class RetrievalPipeline:
             )
         )
 
-        faiss_results = (
-            self.faiss.search(
-                query_embedding
+        retrieval_results = (
+            self.hybrid.search(
+                query_embedding=query_embedding,
+                query_text=request.question
             )
         )
 
         chunks = (
             self.database_retriever
             .retrieve_chunks(
-                faiss_results=faiss_results,
+                retrieval_results=retrieval_results,
                 request=request
             )
         )
